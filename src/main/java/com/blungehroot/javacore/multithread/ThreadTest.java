@@ -1,21 +1,20 @@
 package com.blungehroot.javacore.multithread;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 
 public class ThreadTest {
     Foo foo = new Foo();
 
     CompletableFuture<Void> cf1 = CompletableFuture.runAsync(
-            () -> foo.first(), Executors.newSingleThreadExecutor()
+            () -> foo.first()
     );
 
     CompletableFuture<Void> cf2 = CompletableFuture.runAsync(
-            () -> foo.second(), Executors.newSingleThreadExecutor()
+            () -> foo.second()
     );
 
     CompletableFuture<Void> cf3 = CompletableFuture.runAsync(
-            () -> foo.third(), Executors.newSingleThreadExecutor()
+            () -> foo.third()
     );
 
     public CompletableFuture<Void> getCf1() {
