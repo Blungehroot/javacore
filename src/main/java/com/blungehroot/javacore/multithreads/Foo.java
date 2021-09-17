@@ -5,51 +5,43 @@ import java.util.concurrent.Semaphore;
 import static java.lang.Thread.sleep;
 
 public class Foo {
-    private boolean access = false;
-    Semaphore semaphore = new Semaphore(1);
-    Semaphore semaphore2 = new Semaphore(1);
+    Semaphore semaphore = new Semaphore(2, true);
 
-
-    public void first(Runnable r) {
+    public synchronized void first(Runnable r) {
         try {
-                semaphore.acquire();
-                sleep(300);
-                System.out.print("first");
+            semaphore.acquire(2);
 
-                sleep(300);
-                access = true;
-                semaphore.release();
+            System.out.print("first");
 
+            semaphore.release(2);
+            this.notifyAll();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    public void second(Runnable r) {
+    public synchronized void second(Runnable r) {
         try {
+            this.wait();
+            semaphore.acquire();
 
-            semaphore2.acquire();
-            sleep(300);
             System.out.print("second");
 
-            sleep(300);
-            semaphore2.release();
-
+            semaphore.release();
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    public void third(Runnable r) {
+    public synchronized void third(Runnable r) {
         try {
+            this.wait();
+            semaphore.acquire(2);
 
-                semaphore2.acquire();
-                sleep(300);
-                System.out.print("third");
+            System.out.print("third");
 
-                sleep(300);
-                semaphore2.release();
+            semaphore.release(2);
 
         } catch (InterruptedException e) {
             e.printStackTrace();
