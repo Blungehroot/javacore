@@ -12,30 +12,37 @@ public class Foo {
         try {
             semaphore.acquire(1);
             System.out.print("first");
-
+            semaphore.release();
+            semaphore.drainPermits();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
     public void second(Runnable r) {
-        try {
-            semaphore2.acquire(1);
-            System.out.print("second");
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        while (semaphore.availablePermits() != 0) {
+            try {
+                semaphore2.acquire();
+                System.out.print("second");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+        semaphore2.release();
     }
 
     public void third(Runnable r) {
-        try {
-            semaphore2.acquire(1);
-            System.out.print("third");
+        while (semaphore.availablePermits() != 0) {
+            try {
+                semaphore2.acquire();
+                System.out.print("third");
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+
+        semaphore2.release();
     }
 
 }
